@@ -1,4 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Camera Permission -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    
+    <!-- Gallery access for older Android (up to Android 12) -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    
+    <!-- Gallery access for Android 13+ -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    
     <application
         android:label="pleasepleaseplease"
         android:name="${applicationName}"
