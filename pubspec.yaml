@@ -37,8 +37,10 @@ dependencies:
   image_picker: ^1.2.1
   lottie: ^3.3.2
   flutter_svg: ^2.0.9
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
+  flutter_native_splash: ^2.4.0
   flutter_test:
     sdk: flutter
 
@@ -91,3 +93,22 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/app_icon_final.png"
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/images/logo_round_Please.png
+
+  android_12:
+    image: assets/images/logo_round_Please.png
+    color: "#FFFFFF"
+
+  android: true
+  ios: true
+  web: false
+
+  fullscreen: true
