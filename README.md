@@ -1,10 +1,6 @@
-# pleasepleaseplease
+# Hairoscope UI
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
+See comments in the code for placeholders. (To be replaced with models during integration)
 
 A few resources to get you started if this is your first Flutter project:
 
