@@ -3,6 +3,7 @@ import '../default_styles/app_colors.dart';
 import '../default_styles/app_text_styles.dart';
 import '../widgets/gradient_button.dart';
 import '../pages/photo_instructions_page.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class GetStartedPage extends StatelessWidget {
   const GetStartedPage({super.key});
@@ -15,18 +16,17 @@ class GetStartedPage extends StatelessWidget {
         child: Column(
           children: [
             const Spacer(flex: 2),
-            // Placeholder for image/icon
-            Container(
-              width: 160,
-              height: 160,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(80),
-              ),
-              child: const Icon(
-                Icons.content_cut,
-                size: 80,
-                color: Colors.white,
+            SizedBox(
+              child: Center(
+                child: SvgPicture.asset(
+                  'assets/images/logo.svg',
+                  width: 240,
+                  height: 240,
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
+                  ),
+                ),
               ),
             ),
             const Spacer(flex: 1),
@@ -48,7 +48,7 @@ class GetStartedPage extends StatelessWidget {
           topRight: Radius.circular(20),
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -77,7 +77,7 @@ class GetStartedPage extends StatelessWidget {
               );
             },
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 10),
         ],
       ),
     );

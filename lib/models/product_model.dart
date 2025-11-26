@@ -1,7 +1,7 @@
 class Product {
   final String id;
   final String name;
-  final String imageUrl;
+  final String imageUrl; // URL to product image, baka gawing local path later
   final List<String> tags;
   final String? description;
   final String? shopUrl;
@@ -15,7 +15,7 @@ class Product {
     this.shopUrl,
   });
 
-  // For when NLP is integrated ?? not rly sure
+  // For if NLP uses shopping API to get product data, palitan pag may list na ng products (i think!!)
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       id: json['id'],

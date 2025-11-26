@@ -42,7 +42,7 @@ class HairAnalysisResultsPage extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const ProductResultsPage(
-                      //placeholder. try lang
+                      //PLACEHOLDER. try lang for testing
                       hairType: 'Wavy',
                       confidence: 92.5,
                     ),

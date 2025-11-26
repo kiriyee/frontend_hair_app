@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pleasepleaseplease/pages/product_rating_page.dart';
+import 'package:pleasepleaseplease/pages/feedback_page.dart';
 import '../default_styles/app_colors.dart';
 import '../default_styles/app_text_styles.dart';
 import 'package:pleasepleaseplease/widgets/gradient_button.dart';
-import '../models/placeholder_nlp_model.dart';
+import '../models/product_model.dart';
 import '../widgets/appbar.dart';
 
 class ProductDetailPage extends StatelessWidget {
@@ -103,7 +103,14 @@ class ProductDetailPage extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const RateProduct()),
+              MaterialPageRoute(
+                builder: (context) => const FeedbackPage(
+                  // PLACEHOLDER values for testing, para lang makita yung UI. replaced by the models in integration
+                  productId: "123",
+                  productName: "Herbal Shampoo",
+                  hairType: "Curly",
+                ),
+              ),
             );
           },
         ),

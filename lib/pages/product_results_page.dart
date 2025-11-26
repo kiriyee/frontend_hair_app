@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../default_styles/app_text_styles.dart';
 import '../default_styles/app_colors.dart';
-import '../models/placeholder_nlp_model.dart';
+import '../models/product_model.dart';
 import 'product_detail_page.dart';
 import 'package:pleasepleaseplease/widgets/appbar.dart';
 
@@ -182,6 +182,9 @@ class _ProductResultsPageState extends State<ProductResultsPage>
       }
     }
 
+    // ----------------------------------------------------------------------------
+
+    // HEADER
     return Padding(
       padding: const EdgeInsets.all(16),
       child: AspectRatio(
@@ -241,7 +244,9 @@ class _ProductResultsPageState extends State<ProductResultsPage>
     );
   }
 
-  // Product grid (scrollable, 2 columns, flexible number of products per row in each category)
+  // ----------------------------------------------------------------------------
+
+  // PRODUCT GRID (scrollable, 2 columns, flexible number of products per row in each category)
   Widget _buildProductGrid() {
     final products = _productsByCategory[_selectedCategory] ?? [];
 
