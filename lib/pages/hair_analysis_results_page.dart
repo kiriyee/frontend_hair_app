@@ -5,7 +5,16 @@ import '../widgets/gradient_button.dart';
 import 'package:pleasepleaseplease/widgets/appbar.dart';
 
 class HairAnalysisResultsPage extends StatelessWidget {
-  const HairAnalysisResultsPage({super.key});
+  final String hairType;
+  final double confidence;
+  final String imagePath;
+
+  const HairAnalysisResultsPage({
+    super.key,
+    required this.hairType,
+    required this.confidence,
+    required this.imagePath,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +34,14 @@ class HairAnalysisResultsPage extends StatelessWidget {
                     'Your hair type is',
                     style: AppTextStyles.l.copyWith(color: Colors.white),
                   ),
-
+                   Text(
+                      hairType,
+                      style: AppTextStyles.h2.copyWith(color: Colors.white),
+                  ),
+                  Text(
+                    'Confidence: ${confidence.toStringAsFixed(1)}%',
+                      style: AppTextStyles.m.copyWith(color: Colors.white),
+                  ),
                   // CNN hair type result + confidence percentage
                 ],
               ),

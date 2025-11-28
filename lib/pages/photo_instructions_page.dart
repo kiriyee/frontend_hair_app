@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pleasepleaseplease/pages/hair_analysis_results_page.dart';
 import 'package:pleasepleaseplease/pages/image_error_page.dart';
 import 'package:pleasepleaseplease/widgets/gradient_button.dart';
+import 'package:pleasepleaseplease/services/hair_classifier.dart';
 import '../default_styles/app_text_styles.dart';
 import '../default_styles/app_colors.dart';
 import 'package:lottie/lottie.dart';
@@ -18,65 +19,32 @@ class _PhotoInstructionsPageState extends State<PhotoInstructionsPage> {
   final ImagePicker _picker = ImagePicker();
   bool _isAnalyzing = false;
 
-  // Open camera and take picture function to be accessed when button is pressed
-  Future<void> _openCamera() async {
-    try {
-      final XFile? photo = await _picker.pickImage(
-        source: ImageSource.camera,
-        imageQuality: 80,
-        preferredCameraDevice: CameraDevice.rear,
-      );
+  late HairClassifier _classifier;
 
-      if (photo != null) {
-        setState(() {
-          _isAnalyzing = true;
-        });
-
-        await _analyzeHair(photo.path);
-      }
-    } catch (e) {
-      _showError('Could not access camera');
-    }
-  }
-
-  // Open gallery and pick image function to be accessed when button is pressed
-  Future<void> _openGallery() async {
-    try {
-      final XFile? photo = await _picker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 80,
-      );
-
-      if (photo != null) {
-        setState(() {
-          _isAnalyzing = true;
-        });
-
-        await _analyzeHair(photo.path);
-      }
-    } catch (e) {
-      _showError('Could not access gallery');
-    }
+  @override
+  void initState() {
+    super.initState();
+    _classifier = HairClassifier();   // initialize the model
   }
 
   //----------------------------------------------------------------------------
-  // Analyze hair using CNN model (WILL change later)
+  // Analyze hair using CNN model
   Future<void> _analyzeHair(String imagePath) async {
     try {
-      // TODO: Replace with the actual CNN model call
-      // final result = await CNNService.analyze(imagePath);
+      final result = await _classifier.predictImage(imagePath);
 
-      // Simulate CNN analysis (remove this in production)
-      await Future.delayed(const Duration(seconds: 2));
+      final hairType = result["type"] as String;
+      final confidence = result["confidence"] as double;
 
       // Navigate to hair analysis results page OR error page
       if (mounted) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const HairAnalysisResultsPage(
-              // Pass the CNN results here:
-              // analysisResult: result,
+            builder: (context) => HairAnalysisResultsPage(
+              hairType: hairType,
+              confidence: confidence,
+              imagePath: imagePath,   // <-- PASS THE IMAGE
             ),
           ),
         );
@@ -100,6 +68,50 @@ class _PhotoInstructionsPageState extends State<PhotoInstructionsPage> {
     }
   }
 
+  //----------------------------------------------------------------------------
+  // Open camera and take picture function to be accessed when button is pressed
+  Future<void> _openCamera() async {
+    try {
+      final XFile? photo = await _picker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 80,
+        preferredCameraDevice: CameraDevice.rear,
+      );
+
+      if (photo != null) {
+        setState(() {
+          _isAnalyzing = true;
+        });
+
+        await _analyzeHair(photo.path);
+      }
+    } catch (e) {
+      _showError('Could not access camera');
+    }
+  }
+
+  //----------------------------------------------------------------------------
+  // Open gallery and pick image function to be accessed when button is pressed
+  Future<void> _openGallery() async {
+    try {
+      final XFile? photo = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 80,
+      );
+
+      if (photo != null) {
+        setState(() {
+          _isAnalyzing = true;
+        });
+
+        await _analyzeHair(photo.path);
+      }
+    } catch (e) {
+      _showError('Could not access gallery');
+    }
+  }
+
+  //----------------------------------------------------------------------------
   // Show error message
   void _showError(String message) {
     if (mounted) {
