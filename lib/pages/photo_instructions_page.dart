@@ -24,7 +24,7 @@ class _PhotoInstructionsPageState extends State<PhotoInstructionsPage> {
   @override
   void initState() {
     super.initState();
-    _classifier = HairClassifier();   // initialize the model
+    _classifier = HairClassifier(); // initialize the model
   }
 
   //----------------------------------------------------------------------------
@@ -40,7 +40,6 @@ class _PhotoInstructionsPageState extends State<PhotoInstructionsPage> {
         _isAnalyzing = false; //Finishes analyzing
       });
 
-
       // Navigate to hair analysis results page OR error page
       if (mounted) {
         Navigator.pushReplacement(
@@ -49,7 +48,7 @@ class _PhotoInstructionsPageState extends State<PhotoInstructionsPage> {
             builder: (context) => HairAnalysisResultsPage(
               hairType: hairType,
               confidence: confidence,
-              imagePath: imagePath,   // <-- PASS THE IMAGE
+              imagePath: imagePath, // <-- PASS THE IMAGE
             ),
           ),
         );
@@ -243,7 +242,7 @@ class _PhotoInstructionsPageState extends State<PhotoInstructionsPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Lottie.asset(
-                      'assets/animation/Star Loader 2.json',
+                      'assets/animation/AI Searching.json',
                       width: 300,
                       height: 300,
                       fit: BoxFit.contain,

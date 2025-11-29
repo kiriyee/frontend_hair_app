@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pleasepleaseplease/default_styles/app_colors.dart';
 import 'package:pleasepleaseplease/pages/product_results_page.dart';
+import 'package:pleasepleaseplease/widgets/gradient_text.dart';
 import '../default_styles/app_text_styles.dart';
 import '../widgets/gradient_button.dart';
 import 'package:pleasepleaseplease/widgets/appbar.dart';
@@ -34,13 +36,15 @@ class HairAnalysisResultsPage extends StatelessWidget {
                     'Your hair type is',
                     style: AppTextStyles.l.copyWith(color: Colors.white),
                   ),
-                   Text(
-                      hairType,
-                      style: AppTextStyles.h2.copyWith(color: Colors.white),
+                  SizedBox(height: 16),
+                  GradientText(
+                    text: hairType,
+                    gradient: AppColors.primaryGradient,
                   ),
+                  SizedBox(height: 32),
                   Text(
                     'Confidence: ${confidence.toStringAsFixed(1)}%',
-                      style: AppTextStyles.m.copyWith(color: Colors.white),
+                    style: AppTextStyles.m.copyWith(color: Colors.white),
                   ),
                   // CNN hair type result + confidence percentage
                 ],
