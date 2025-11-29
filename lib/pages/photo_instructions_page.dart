@@ -33,8 +33,13 @@ class _PhotoInstructionsPageState extends State<PhotoInstructionsPage> {
     try {
       final result = await _classifier.predictImage(imagePath);
 
-      final hairType = result["type"] as String;
+      final hairType = result["hairType"] as String;
       final confidence = result["confidence"] as double;
+
+      setState(() {
+        _isAnalyzing = false; //Finishes analyzing
+      });
+
 
       // Navigate to hair analysis results page OR error page
       if (mounted) {

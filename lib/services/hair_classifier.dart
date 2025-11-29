@@ -13,7 +13,7 @@ class HairClassifier {
   }
 
   Future<void> _loadModel() async {
-    _interpreter = await Interpreter.fromAsset('model/hair_model.tflite');
+    _interpreter = await Interpreter.fromAsset('assets/model/hair_model.tflite');
   }
 
   Future<Map<String, dynamic>> predictImage(String imagePath) async {
@@ -48,7 +48,7 @@ class HairClassifier {
     final maxIndex = scores.indexWhere((v) => v == scores.reduce((a, b) => a > b ? a : b));
 
     return {
-      "type": labels[maxIndex],
+      "hairType": labels[maxIndex],
       "confidence": scores[maxIndex] * 100,
     };
   }
