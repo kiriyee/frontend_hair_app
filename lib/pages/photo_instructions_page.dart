@@ -226,7 +226,7 @@ class _PhotoInstructionsPageState extends State<PhotoInstructionsPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Lottie.asset(
-                      'assets/animation/Star Loader 2.json',
+                      'assets/animation/AI Searching.json',
                       width: 300,
                       height: 300,
                       fit: BoxFit.contain,
