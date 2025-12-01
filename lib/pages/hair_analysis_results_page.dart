@@ -58,7 +58,7 @@ class HairAnalysisResultsPage extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProductResultsPage(
-                      hairType: 'hairType',
+                      hairType: hairType,
                       confidence: confidence,
                     ),
                   ),

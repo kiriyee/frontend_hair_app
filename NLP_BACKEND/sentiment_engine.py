@@ -81,8 +81,13 @@ def ensure_columns(df, defaults):
 
 
 # ==================== FUNCTION: GET TOP PRODUCTS ====================
-def get_top_products(hair_type, top_n=3, category=None, tags=None):
-    """Retrieve top N products for a specific hair type"""
+def get_top_products(hair_type, top_n=None, category=None, tags=None):
+    """
+    Retrieve products for a specific hair type.
+
+    If top_n is a positive integer, limit to that many highest-scoring products.
+    If top_n is None or non-positive, return all matching products.
+    """
     if not os.path.exists(MASTER_CSV_PATH):
         return None, "ERROR: No products in database. Import some products first!"
 
@@ -122,12 +127,14 @@ def get_top_products(hair_type, top_n=3, category=None, tags=None):
             f"No products found for {hair_type} hair type with the selected filters.",
         )
 
-    # Sort and get top N
-    top_products = filtered.sort_values(
-        "Avg Sentiment Score", ascending=False
-    ).head(top_n)
+    # Sort by sentiment score (highest first)
+    sorted_df = filtered.sort_values("Avg Sentiment Score", ascending=False)
 
-    return top_products, None
+    # Optionally limit to top N if requested
+    if top_n is not None and isinstance(top_n, (int, float)) and top_n > 0:
+        sorted_df = sorted_df.head(int(top_n))
+
+    return sorted_df, None
 
 
 # ==================== FUNCTION: GET PRODUCT DETAILS ====================
@@ -263,12 +270,16 @@ def update_product_details(
 
 
 # ==================== API: RECOMMENDATIONS ====================
-def recommend_products(hair_type, top_n=3):
+def recommend_products(hair_type, top_n=None):
     """
-    Get top product recommendations for a given hair type.
+    Get product recommendations for a given hair type.
+
+    By default (top_n=None), this returns all products for the hair type.
+    You can optionally pass a positive top_n to cap the number of products.
     """
     hair_type_lower = hair_type.lower()
 
+    # Ask get_top_products for all matches by default (no hard limit)
     top_products_df, error = get_top_products(hair_type_lower, top_n=top_n)
 
     if error or top_products_df is None or len(top_products_df) == 0:
