@@ -5,7 +5,7 @@ class Product {
   final List<String> tags;
   final String? description;
   final String? shopUrl;
-  final String category; // Added this field
+  final String category;
 
   Product({
     required this.id,
@@ -14,22 +14,44 @@ class Product {
     required this.tags,
     this.description,
     this.shopUrl,
-    this.category = 'Other', // Default value
+    this.category = 'Other',
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
+    // Defensive parsing for tags (can be list, string, or missing)
+    List<String> parsedTags = [];
+    final rawTags = json['tags'];
+
+    if (rawTags is List) {
+      parsedTags = rawTags.map((e) => e.toString()).toList();
+    } else if (rawTags is String) {
+      parsedTags = rawTags
+          .split(RegExp(r'[;,]'))
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .toList();
+    }
+
+    // Category: default to 'Other' if missing or empty
+    String rawCategory = (json['category'] ?? '').toString().trim();
+    String safeCategory = rawCategory.isEmpty ? 'Other' : rawCategory;
+
+    // Image URL: backend uses 'product_image'
+    String rawImage = (json['product_image'] ?? '').toString().trim();
+    String safeImageUrl = rawImage.isNotEmpty
+        ? rawImage
+        : 'https://via.placeholder.com/164x195';
+
     return Product(
       // Use a fallback ID if none exists
-      id: json['id']?.toString() ?? DateTime.now().millisecondsSinceEpoch.toString(),
-      name: json['name'] ?? 'Unknown Product',
-      // MAP PYTHON KEYS TO FLUTTER FIELDS HERE:
-      imageUrl: json['product_image'] != null && json['product_image'] != "" 
-          ? json['product_image'] 
-          : 'https://via.placeholder.com/164x195',
-      tags: json['tags'] != null ? List<String>.from(json['tags']) : [],
-      description: json['description'],
-      shopUrl: json['product_url'], 
-      category: json['category'] ?? 'Other',
+      id: json['id']?.toString() ??
+          DateTime.now().millisecondsSinceEpoch.toString(),
+      name: (json['name'] ?? 'Unknown Product').toString(),
+      imageUrl: safeImageUrl,
+      tags: parsedTags,
+      description: json['description']?.toString(),
+      shopUrl: json['product_url']?.toString(),
+      category: safeCategory,
     );
   }
 }

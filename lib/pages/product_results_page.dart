@@ -6,7 +6,7 @@ import '../default_styles/app_text_styles.dart';
 import '../default_styles/app_colors.dart';
 import '../models/product_model.dart';
 import 'product_detail_page.dart';
-import 'package:pleasepleaseplease/widgets/appbar.dart'; // Keep your existing package name
+import 'package:pleasepleaseplease/widgets/appbar.dart';
 
 class ProductResultsPage extends StatefulWidget {
   final String hairType;
@@ -61,9 +61,7 @@ class _ProductResultsPageState extends State<ProductResultsPage>
 
   // --- API FETCHING LOGIC ---
   Future<void> _fetchRecommendations() async {
-    // ⚠️ IMPORTANT: REPLACE THIS WITH YOUR LOCAL IP ADDRESS
-    // Use '10.0.2.2' if running on Android Emulator.
-    // Use your PC's IP (e.g., '192.168.1.5') if running on a physical phone.
+    // Use Android emulator IP to talk to Flask running on host machine
     final url = Uri.parse('http://10.0.2.2:5000/recommend');
 
     try {
@@ -72,19 +70,37 @@ class _ProductResultsPageState extends State<ProductResultsPage>
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "hair_type": widget.hairType,
-          "confidence": widget.confidence
+          "confidence": widget.confidence,
         }),
       );
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        final dynamic decoded = jsonDecode(response.body);
 
-        // 1. Parse products from JSON
-        List<dynamic> recs = data['recommendations'];
-        List<Product> products =
-            recs.map((json) => Product.fromJson(json)).toList();
+        if (decoded is! Map<String, dynamic>) {
+          setState(() {
+            _errorMessage = "Unexpected response format from server.";
+            _isLoading = false;
+          });
+          return;
+        }
 
-        // 2. Sort into categories
+        final data = decoded;
+
+        // 1. Parse products from JSON (defensive)
+        final recsDynamic = data['recommendations'];
+        List<dynamic> recsList;
+        if (recsDynamic is List) {
+          recsList = recsDynamic;
+        } else {
+          recsList = const [];
+        }
+
+        List<Product> products = recsList
+            .map((json) => Product.fromJson(json as Map<String, dynamic>))
+            .toList();
+
+        // 2. Sort into categories used by UI
         Map<String, List<Product>> sorted = {
           'Shampoo': [],
           'Hair Conditioner': [],
@@ -92,21 +108,20 @@ class _ProductResultsPageState extends State<ProductResultsPage>
         };
 
         for (var p in products) {
-          // Robust checking for category names
           String cat = p.category.toLowerCase();
           if (cat.contains('shampoo')) {
             sorted['Shampoo']!.add(p);
           } else if (cat.contains('conditioner')) {
             sorted['Hair Conditioner']!.add(p);
           } else {
-            // Default to styling if it doesn't match others
+            // Default bucket if it doesn't match others
             sorted['Styling Product']!.add(p);
           }
         }
 
         setState(() {
           _productsByCategory = sorted;
-          _explanation = data['explanation'] ?? "";
+          _explanation = (data['explanation'] ?? '').toString();
           _isLoading = false;
         });
       } else {
@@ -118,7 +133,7 @@ class _ProductResultsPageState extends State<ProductResultsPage>
     } catch (e) {
       setState(() {
         _errorMessage =
-            "Connection Error.\nCheck if Python is running and IP is correct.\nDetails: $e";
+            "Connection Error.\nCheck if Python is running on port 5000 and that you're using the correct IP.\nDetails: $e";
         _isLoading = false;
       });
     }
