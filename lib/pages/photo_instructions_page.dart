@@ -24,7 +24,7 @@ class _PhotoInstructionsPageState extends State<PhotoInstructionsPage> {
   @override
   void initState() {
     super.initState();
-    _classifier = HairClassifier();   // initialize the model
+    _classifier = HairClassifier(); // initialize the model
   }
 
   //----------------------------------------------------------------------------
@@ -40,7 +40,6 @@ class _PhotoInstructionsPageState extends State<PhotoInstructionsPage> {
         _isAnalyzing = false; //Finishes analyzing
       });
 
-
       // Navigate to hair analysis results page OR error page
       if (mounted) {
         Navigator.pushReplacement(
@@ -49,7 +48,7 @@ class _PhotoInstructionsPageState extends State<PhotoInstructionsPage> {
             builder: (context) => HairAnalysisResultsPage(
               hairType: hairType,
               confidence: confidence,
-              imagePath: imagePath,   // <-- PASS THE IMAGE
+              imagePath: imagePath, // <-- PASS THE IMAGE
             ),
           ),
         );
@@ -191,11 +190,11 @@ class _PhotoInstructionsPageState extends State<PhotoInstructionsPage> {
               // Bottom buttons
               Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 41,
+                  horizontal: 16,
                   vertical: 50,
                 ),
                 child: Row(
-                  spacing: 24,
+                  spacing: 16,
                   children: [
                     Expanded(
                       child: GradientButton(
@@ -204,11 +203,9 @@ class _PhotoInstructionsPageState extends State<PhotoInstructionsPage> {
                           horizontal: 16,
                           vertical: 16,
                         ),
-                        iconColor: AppColors.primary,
                         textStyle: AppTextStyles.s.copyWith(
                           color: AppColors.primary,
                         ),
-                        icon: Icons.camera_alt,
                         text: 'Open camera',
                         onPressed: _isAnalyzing ? null : _openCamera,
                       ),
@@ -220,11 +217,9 @@ class _PhotoInstructionsPageState extends State<PhotoInstructionsPage> {
                           horizontal: 16,
                           vertical: 16,
                         ),
-                        iconColor: AppColors.primary,
                         textStyle: AppTextStyles.s.copyWith(
                           color: AppColors.primary,
                         ),
-                        icon: Icons.upload,
                         text: 'Upload photo',
                         onPressed: _isAnalyzing ? null : _openGallery,
                       ),
