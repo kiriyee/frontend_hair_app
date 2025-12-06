@@ -5,6 +5,7 @@ import '../default_styles/app_text_styles.dart';
 import 'package:pleasepleaseplease/widgets/gradient_button.dart';
 import '../models/product_model.dart';
 import '../widgets/appbar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final Product product;
@@ -24,13 +25,16 @@ class ProductDetailPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Large product image
-            Container(
-              width: double.infinity,
-              height: 400,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(product.imageUrl),
-                  fit: BoxFit.cover,
+            InkWell(
+              onTap: () => _openProductUrl(context),
+              child: Container(
+                width: double.infinity,
+                height: 400,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(product.imageUrl),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
@@ -41,10 +45,13 @@ class ProductDetailPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Product name
-                  Text(
-                    product.name,
-                    style: AppTextStyles.h2.copyWith(
-                      color: AppColors.textHeading,
+                  InkWell(
+                    onTap: () => _openProductUrl(context),
+                    child: Text(
+                      product.name,
+                      style: AppTextStyles.h2.copyWith(
+                        color: AppColors.textHeading,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -116,5 +123,68 @@ class ProductDetailPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _openProductUrl(BuildContext context) async {
+    final url = product.shopUrl;
+    
+    if (url == null || url.isEmpty) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Product link is not available'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+      return;
+    }
+
+    try {
+      final uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        // Try platformDefault first (more reliable on Android)
+        // Falls back to externalApplication if needed
+        try {
+          await launchUrl(uri, mode: LaunchMode.platformDefault);
+        } catch (e) {
+          // If platformDefault fails, try externalApplication as fallback
+          final errorMessage = e.toString().toLowerCase();
+          if (errorMessage.contains('component name') || 
+              errorMessage.contains('null')) {
+            // Try externalApplication as fallback
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
+          } else {
+            rethrow;
+          }
+        }
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Could not open product link'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        final errorMessage = e.toString().toLowerCase();
+        String userMessage;
+        if (errorMessage.contains('component name') || 
+            errorMessage.contains('null')) {
+          userMessage = 'No app available to open this link. Please install a web browser.';
+        } else {
+          userMessage = 'Error opening link: $e';
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(userMessage),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
   }
 }
