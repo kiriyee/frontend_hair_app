@@ -88,7 +88,6 @@ class ProductDetailPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
 
-                  // TODO: Replace with actual product description from NLP
                   Text(
                     'This product is specially formulated for your hair type. '
                     'It contains natural ingredients that help maintain healthy, '
@@ -112,7 +111,6 @@ class ProductDetailPage extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => const FeedbackPage(
-                  // PLACEHOLDER values for testing, para lang makita yung UI. replaced by the models in integration
                   productId: "123",
                   productName: "Herbal Shampoo",
                   hairType: "Curly",
