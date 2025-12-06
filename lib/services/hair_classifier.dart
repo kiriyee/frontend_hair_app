@@ -53,9 +53,9 @@ class HairClassifier {
           (x) {
             final pixel = resized.getPixel(x, y);
             return [
-              pixel.r / 255.0,
-              pixel.g / 255.0,
-              pixel.b / 255.0,
+              (pixel.r / 255.0 - 0.5) * 2.0,
+              (pixel.g / 255.0 - 0.5) * 2.0,
+              (pixel.b / 255.0 - 0.5) * 2.0,
             ];
           },
         ),
