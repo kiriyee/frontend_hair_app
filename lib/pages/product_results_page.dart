@@ -62,7 +62,7 @@ class _ProductResultsPageState extends State<ProductResultsPage>
   // --- API FETCHING LOGIC ---
   Future<void> _fetchRecommendations() async {
     // Use Android emulator IP to talk to Flask running on host machine
-    final url = Uri.parse('http://10.0.2.2:5000/recommend');
+    final url = Uri.parse('https://axyDev.pythonanywhere.com/recommend');
 
     try {
       final response = await http.post(
